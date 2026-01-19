@@ -1,0 +1,23 @@
+Design a comprehensive 12-month surveillance study to monitor antibiotic resistance gene (ARG) dynamics in hospital wastewater.
+
+Study Context:
+- Location: Large urban teaching hospital (500+ beds)
+- Goal: Track ARG prevalence and abundance across different treatment stages
+- Special interest: Correlate ARG patterns with antibiotic usage data
+- Budget: Moderate (university-funded pilot study)
+
+Specific Questions:
+1. What sampling frequency and duration would capture seasonal variation?
+2. Which sampling points (influent, activated sludge, effluent) are most informative?
+3. What metadata should we collect (temperature, pH, chemical analysis)?
+4. What wet-lab protocols are appropriate for low-biomass wastewater samples?
+5. What bioinformatics pipeline would you recommend for ARG quantification?
+6. What statistical analyses should we use to compare treatment stages?
+
+Constraints:
+- Need to minimize costs while maintaining statistical power
+- Must comply with biosafety regulations for clinical wastewater
+- Limited on-site laboratory facilities (samples will be transported)
+
+
+

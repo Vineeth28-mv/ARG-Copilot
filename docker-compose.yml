@@ -1,0 +1,70 @@
+version: '3.8'
+
+services:
+  # Main application service
+  arg-framework:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: arg-framework-api
+    ports:
+      - "8000:8000"
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - OPENAI_MODEL=${OPENAI_MODEL:-gpt-4o}
+      - LOG_LEVEL=${LOG_LEVEL:-INFO}
+    volumes:
+      # Mount runs directory for persistent outputs
+      - ./runs:/app/runs
+      # Mount app directory for development (hot reload)
+      - ./app:/app/app
+    command: uvicorn app.api:app --host 0.0.0.0 --port 8000 --reload
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    restart: unless-stopped
+
+  # Development service with shell access
+  dev:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: arg-framework-dev
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - OPENAI_MODEL=${OPENAI_MODEL:-gpt-4o}
+    volumes:
+      - .:/app
+    command: /bin/bash
+    stdin_open: true
+    tty: true
+    profiles:
+      - dev
+
+  # Testing service
+  test:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: arg-framework-test
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - PYTHONPATH=/app
+    volumes:
+      - .:/app
+    command: pytest tests/ -v --cov=app --cov-report=term-missing
+    profiles:
+      - test
+
+# Shared network
+networks:
+  default:
+    name: arg-framework-network
+
+# Persistent volumes
+volumes:
+  runs:
+    driver: local
